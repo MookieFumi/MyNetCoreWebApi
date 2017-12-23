@@ -1,15 +1,9 @@
 ﻿using System;
-using mywebapi.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Autofac.Extensions.DependencyInjection;
-using Autofac;
-using mywebapi.Services;
-using Autofac.Extras.DynamicProxy;
-using Castle.DynamicProxy;
 using mywebapi.Infrastructure.DI;
 
 namespace mywebapi
@@ -27,7 +21,7 @@ namespace mywebapi
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-                        
+
             //Container/ services provider
             var container = services.GetAutofacServiceProvider();
             return container;
@@ -38,9 +32,7 @@ namespace mywebapi
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                loggerFactory.AddConsole();
-                loggerFactory.AddDebug();
+                app.UseDeveloperExceptionPage();               
             }
 
             app.UseMvcWithDefaultRoute();

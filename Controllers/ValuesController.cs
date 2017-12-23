@@ -21,14 +21,16 @@ namespace mywebapi.Controllers
         [HttpGet]
         public IEnumerable<int> Get()
         {
-            return _valuesService.GetValues(666);
+            IEnumerable<int> values = _valuesService.GetValues(666);
+            _logger.LogInformation("MookieFumi @2018", values);
+            return values;
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
-            return "value";
+            return id.ToString();
         }
 
         // POST api/values
