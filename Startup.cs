@@ -5,6 +5,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
+using mywebapi.Services;
+using Autofac.Extras.DynamicProxy;
+using Castle.DynamicProxy;
+using mywebapi.Infrastructure.DI;
 
 namespace mywebapi
 {
@@ -21,7 +27,9 @@ namespace mywebapi
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            var container = services.ConfigureContainer();
+                        
+            //Container/ services provider
+            var container = services.GetAutofacServiceProvider();
             return container;
         }
 
