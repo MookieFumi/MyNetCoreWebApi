@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using mywebapi.Infrastructure.DI;
+using mywebapi.Infrastructure.Middlewares;
 
 namespace mywebapi
 {
@@ -32,10 +33,12 @@ namespace mywebapi
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();               
+                app.UseDeveloperExceptionPage();
             }
+             
+            app.UseRequestResponseLoggingMiddleware();
 
-            app.UseMvcWithDefaultRoute();
+            app.UseMvcWithDefaultRoute();            
         }
     }
 }

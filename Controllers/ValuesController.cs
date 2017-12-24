@@ -22,7 +22,7 @@ namespace mywebapi.Controllers
         public IEnumerable<int> Get()
         {
             IEnumerable<int> values = _valuesService.GetValues(666);
-            _logger.LogInformation("MookieFumi @2018", values);
+            _logger.LogDebug("MookieFumi @2018", values);
             return values;
         }
 

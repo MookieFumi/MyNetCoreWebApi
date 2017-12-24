@@ -131,11 +131,12 @@ Middlewares.
     Se introdujo en Owin.
     Son componentes que forma un pipeline entre el servidor y nuestra aplicación.
     Se procesan en orden.
+    ![Middleware pipeline](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/_static/request-delegate-pipeline.png)
     Middleware pass throw
         Ojo! Tiene que acabar en un Run siempre, ojo! o un Use sin hacer invoke del siguiente
         Use
             Response.HasStarted. Es útil para indicar si las cabeceras han sido enviadas o el body ha sido escrito.
-            Si es true, sólo es válido llamar a Respone.WriteAsync y no sew puede por otro lado modificar la cabeceras.            
+            Si es true, sólo es válido llamar a Respone.WriteAsync y no se puede por otro lado modificar la cabeceras.            
         Run
             Terminal
         Map
