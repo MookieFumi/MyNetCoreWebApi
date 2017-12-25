@@ -15,6 +15,7 @@ namespace mywebapi.Controllers
         {
             _valuesService = valuesService;
             _logger = logger;
+            _logger.LogDebug($"Ctor {nameof(ValuesController)}");
         }
 
         // GET api/values
@@ -22,7 +23,6 @@ namespace mywebapi.Controllers
         public IEnumerable<int> Get()
         {
             IEnumerable<int> values = _valuesService.GetValues(666);
-            _logger.LogDebug("MookieFumi @2018", values);
             return values;
         }
 

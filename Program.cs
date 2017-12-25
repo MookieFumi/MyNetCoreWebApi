@@ -28,14 +28,13 @@ namespace mywebapi
                                     .Enrich.WithMachineName()
                                     .Enrich.WithThreadId()
                                     .WriteTo.ColoredConsole()
-                                    .WriteTo.RollingFile(Path.Combine(hostingContext.HostingEnvironment.ContentRootPath,"Logs/{Date}.txt"))
+                                    .WriteTo.RollingFile(Path.Combine(hostingContext.HostingEnvironment.ContentRootPath, "Logs/{Date}.txt"))
                                     .CreateLogger();
                 })
                 .ConfigureLogging((hostingContext, logging) =>
                 {
                     logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
                     logging.AddDebug();
-                    // logging.AddConsole();
                     logging.AddSerilog();
                 })
                 .UseStartup<Startup>()

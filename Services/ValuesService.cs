@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using Autofac.Extras.DynamicProxy;
-using mywebapi.Infrastructure;
 
 namespace mywebapi.Services
 {

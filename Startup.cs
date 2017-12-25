@@ -23,22 +23,21 @@ namespace mywebapi
         {
             services.AddMvc();
 
-            //Container/ services provider
             var container = services.GetAutofacServiceProvider();
             return container;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-             
+
             app.UseRequestResponseLoggingMiddleware();
 
-            app.UseMvcWithDefaultRoute();            
+            app.UseMvcWithDefaultRoute();
         }
     }
 }
