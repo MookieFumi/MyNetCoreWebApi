@@ -2,45 +2,59 @@
 
 En este repo voy a ir metiendo todos los conceptos que he ido asimilando al ver temas de ASPNet Core y ASPNet Core MVC.
 
-Todas estas notas de abajo las tengo que ir organizando y desarrolloando.
+Todas estas notas de abajo las tengo que ir organizando y desarrollando.
 
+# Conceptos básicos
+
+Para saber las versiones tanto del SDK como del runtime tenemos varios comandos:
+
+```
 dotnet --info       (SDK + Runtime)
 dotnet --version    (SDK)
+```
 
-TFM - Target framework moniker
+Para indicar la plataforma de destino de una aplicación .NET Core se especifica en el archivo del proyecto, mediante monikers de la plataforma de destino (TFM - Target framework moniker).
+```
+<PropertyGroup>
+	<TargetFramework>netcoreapp2.0</TargetFramework>
+</PropertyGroup>
+```
 
-Hay dos tipos de despliegue:
-    FDD. Framework-dependent deployment (Heredado de full framework)
-    SCD. Self-contained deployment
-    Se tiene que indicar en el csproj.
+En general podemos hablar que existen dos dos tipos de despliegue y se debe indicar en el csproj:
+* **FDD. Framework-dependent deployments**. Heredado de full framework, es decir, 
+desplegamos sólo la aplicacióny las dependencias y no es necesario desplegar .NET Core, ya que la aplicación utilizará la versión de .NET Core presente en el sistema de destino. Este es el modelo de implementación predeterminado para las aplicaciones .NET Core.
+* **SCD. Self-contained deployments.** Desplegamos la aplicación y las dependencias de terceros requeridas así como la versión de .NET Core utilizada para construir la aplicación.
 
-TFM Nuget/
-
-Huella de memoria (memory foot print)
-
+```
 dotnet publish -r win7-x64
     Sin -r hace FDD 
     Con -r hace SCD
+```
 
-Proxy inverso. Meter algo delante de kestrel (IIS, nginx)
-Kestrel, no apto para producción sin proxy inverso.
-NET Core Windows Server Hosting
+> Concepto Huella de memoria (memory foot print). Revisar
 
-PCL. Class library
-    Eliges el target a principio.
-Shared projects.
-    Directivas del compilador para ejecutar condicionalmente según plataforma dónde corre
-.NET Standard.
-    Evolución de PCL. Sigue haciendo una librería portable pero con otro enfoque.
-    Su numeracion es lineal no como BCL
-    No hay breaking change (NETStandar 1.6 es compatible con 1.5, 1.4, etc...)
-    NETStandar es una especificación, no una implementación.
-    Open-ended.
-    .NET portability analyzer (tool VS20017)
+> **Proxy inverso**. Meter algo delante de kestrel (IIS, nginx) y cuando hablamos de un entorno de producción debemos asumir que Kestrel no es apto sin un proxy inverso.
 
-NetCore2.0 implementa NETStandar 2.0
+# Introducción
 
-Host - Entorno de ejecución
+## Compartir código
+
+* **PCL**. 
+  * Class library/ eliges el target al principio.
+* **Shared projects**. 
+  * Directivas de compilador para ejecutar condicionalmente según plataforma dónde corre
+* **.Net Standard**.    
+  * Es la evolución de PCL, sigue habiendo una librería portable pero con otro enfoque.    
+    * Su numeracion es lineal no como PCL.    
+    * No hay breaking changes (NETStandar 1.6 es compatible con 1.5, 1.4, etc...)
+    * .Net Standar es una especificación, no una implementación.
+    * Concepto Open-ended.
+    * .NET portability analyzer (tool VS20017).
+
+> Por lo que se puede decir que Net Core 2.0 implementa Net Standar 2.0
+
+El pipeline de una aplicación de .Net Core es el siguiente:
+* Host - Entorno de ejecución
 Server
 Middleware
 Framework (terminal)
