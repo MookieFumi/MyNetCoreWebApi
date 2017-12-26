@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
+using mywebapi.Features.Home.ViewModels;
 using mywebapi.Services;
-using mywebapi.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace mywebapi.Controllers
+namespace mywebapi.Features.Home
 {
     [Route("[controller]")]
     public class HomeController : Controller

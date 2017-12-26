@@ -20,5 +20,20 @@ namespace mywebapi.Infrastructure.DI
 
             return new AutofacServiceProvider(builder.Build());
         }
+
+        public static IMvcBuilder AddFeatureFolders(this IMvcBuilder services)
+        {
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            services.AddRazorOptions(o =>
+            {
+                o.ViewLocationExpanders.Add(new FeatureFolderViewLocationExpander());
+            });
+
+            return services;
+        }
     }
 }

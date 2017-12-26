@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using mywebapi.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
-namespace mywebapi.Controllers
+namespace mywebapi.Controllers.api
 {
     [Route("api/[controller]")]
     public class ValuesController : Controller

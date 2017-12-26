@@ -8,6 +8,9 @@ using mywebapi.Services;
 
 namespace mywebapi.Infrastructure.DI.Modules
 {
+    /// <summary>
+    /// https://blogs.msdn.microsoft.com/cesardelatorre/2017/01/26/comparing-asp-net-core-ioc-service-life-times-and-autofac-ioc-instance-scopes/
+    /// </summary>
     public class MainModule : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
@@ -36,7 +39,8 @@ namespace mywebapi.Infrastructure.DI.Modules
 
                     args.ReplaceInstance(proxy);
 
-                }).AsImplementedInterfaces();
+                })
+                .AsImplementedInterfaces();
         }
     }
 }
