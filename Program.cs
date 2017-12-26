@@ -22,7 +22,7 @@ namespace mywebapi
 
                     Log.Logger = new LoggerConfiguration()
                                     .MinimumLevel.Debug()
-                                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                                    .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
                                     .MinimumLevel.Override("System", LogEventLevel.Warning)
                                     .Enrich.FromLogContext()
                                     .Enrich.WithMachineName()
@@ -36,6 +36,7 @@ namespace mywebapi
                     logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
                     logging.AddDebug();
                     logging.AddSerilog();
+                    //logging.AddConsole();
                 })
                 .UseStartup<Startup>()
                 .Build();
