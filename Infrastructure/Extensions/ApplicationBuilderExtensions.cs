@@ -1,6 +1,7 @@
+using mywebapi.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Builder;
 
-namespace mywebapi.Infrastructure.Middlewares
+namespace mywebapi.Infrastructure.Extensions
 {
     public static class ApplicationBuilderExtensions
     {

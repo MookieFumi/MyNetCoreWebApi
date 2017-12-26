@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace mywebapi.Infrastructure
 {
+    /// <summary>
+    /// http://kurtdowswell.com/software-development/asp-net-core-mvc-feature-folders/
+    /// https://github.com/kdowswell/asp-net-core-mvc-feature-folders
+    /// </summary>
     public class FeatureFolderViewLocationExpander : IViewLocationExpander
     {
         public void PopulateValues(ViewLocationExpanderContext context)
