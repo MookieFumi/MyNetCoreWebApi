@@ -18,15 +18,14 @@ namespace mywebapi.Infrastructure
         public void Intercept(IInvocation invocation)
         {
             var logger = _loggerFactory.CreateLogger(invocation.TargetType);
-            var stopwatch = new Stopwatch();
+            var stopwatch = Stopwatch.StartNew();
             
-            stopwatch.Start();
-            logger.LogInformation($"{invocation.TargetType}.{invocation.Method.Name} Params {string.Join(", ", invocation.Arguments.Select(a => (JsonConvert.SerializeObject(a) ?? "").ToString()).ToArray())}");
+            logger.LogInformation($"StopwatchInterceptor --> Before --> {invocation.TargetType}.{invocation.Method.Name} Params {string.Join(", ", invocation.Arguments.Select(a => (JsonConvert.SerializeObject(a) ?? "").ToString()).ToArray())}", invocation.Arguments);
 
             invocation.Proceed();
 
             stopwatch.Stop();
-            logger.LogInformation($"Done ({stopwatch.ElapsedMilliseconds} ms): result was {JsonConvert.SerializeObject(invocation.ReturnValue)}.");
+            logger.LogInformation($"StopwatchInterceptor --> After --> ({stopwatch.ElapsedMilliseconds} ms): result was {JsonConvert.SerializeObject(invocation.ReturnValue)}.", invocation.ReturnValue);
         }
     }
 }

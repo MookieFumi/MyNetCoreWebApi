@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using mywebapi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,11 +10,13 @@ namespace mywebapi.Controllers
     public class ValuesController : Controller
     {
         private readonly IValuesService _valuesService;
+        private readonly ISpecialValuesService _specialValuesService;
         private readonly ILogger<ValuesController> _logger;
 
-        public ValuesController(IValuesService valuesService, ILogger<ValuesController> logger)
+        public ValuesController(IValuesService valuesService, ISpecialValuesService specialValuesService, ILogger<ValuesController> logger)
         {
             _valuesService = valuesService;
+            _specialValuesService = specialValuesService;
             _logger = logger;
             _logger.LogDebug($"Ctor {nameof(ValuesController)}");
         }
@@ -22,7 +25,23 @@ namespace mywebapi.Controllers
         [HttpGet]
         public IEnumerable<int> Get()
         {
-            IEnumerable<int> values = _valuesService.GetValues(666);
+            var values = _valuesService.GetValues();
+            return values;
+        }
+
+        // GET api/values/stations
+        [HttpGet("even")]
+        public async Task<IEnumerable<int>> GetEvenValues()
+        {
+            var values = await _specialValuesService.GetEvenValues();
+            return values;
+        }
+
+        // GET api/values/stations
+        [HttpGet("odd")]
+        public async Task<IEnumerable<int>> GetOddValues()
+        {
+            var values = await _specialValuesService.GetOddValues();
             return values;
         }
 

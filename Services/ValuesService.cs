@@ -1,15 +1,15 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace mywebapi.Services
 {
     public class ValuesService : IValuesService
     {
-        public IEnumerable<int> GetValues(int customerId)
+        public IEnumerable<int> GetValues()
         {
-            return new List<int>
-            {
-                2, 6, 8, 10
-            };
+            return Enumerable
+                .Range(0, 20)
+                .OrderBy(x => x);
         }
     }
 }
