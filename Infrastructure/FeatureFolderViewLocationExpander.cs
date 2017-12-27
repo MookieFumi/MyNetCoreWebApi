@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Razor;
 
-namespace mywebapi.Infrastructure
+namespace MyWebApi.Infrastructure
 {
     /// <summary>
     /// http://kurtdowswell.com/software-development/asp-net-core-mvc-feature-folders/

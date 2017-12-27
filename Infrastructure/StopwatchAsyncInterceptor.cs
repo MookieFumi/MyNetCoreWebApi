@@ -5,7 +5,7 @@ using Castle.DynamicProxy;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace mywebapi.Infrastructure
+namespace MyWebApi.Infrastructure
 {
     /// <summary>
     /// https://github.com/JSkimming/Castle.Core.AsyncInterceptor

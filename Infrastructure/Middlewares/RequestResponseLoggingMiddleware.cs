@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Logging;
 
-namespace mywebapi.Infrastructure.Middlewares
+namespace MyWebApi.Infrastructure.Middlewares
 {
     public class RequestResponseLoggingMiddleware
     {

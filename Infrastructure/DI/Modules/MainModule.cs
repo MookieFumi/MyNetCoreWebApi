@@ -4,9 +4,9 @@ using System.Reflection;
 using Autofac;
 using Castle.DynamicProxy;
 using Microsoft.Extensions.Logging;
-using mywebapi.Services;
+using MyWebApi.Services;
 
-namespace mywebapi.Infrastructure.DI.Modules
+namespace MyWebApi.Infrastructure.DI.Modules
 {
     /// <summary>
     /// https://blogs.msdn.microsoft.com/cesardelatorre/2017/01/26/comparing-asp-net-core-ioc-service-life-times-and-autofac-ioc-instance-scopes/

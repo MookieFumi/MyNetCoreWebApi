@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace mywebapi.Services
+namespace MyWebApi.Services
 {
     public class ValuesService : IValuesService
     {

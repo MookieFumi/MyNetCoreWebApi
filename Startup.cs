@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using mywebapi.Infrastructure.Extensions;
+using MyWebApi.Infrastructure.Extensions;
 
-namespace mywebapi
+namespace MyWebApi
 {
     public class Startup
     {

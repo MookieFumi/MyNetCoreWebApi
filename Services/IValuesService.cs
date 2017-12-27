@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace mywebapi.Services
+namespace MyWebApi.Services
 {
     public interface IValuesService
     {

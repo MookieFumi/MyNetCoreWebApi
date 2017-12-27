@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace mywebapi.Features.Home.ViewModels
+namespace MyWebApi.Features.Home.ViewModels
 {
     public class AboutViewModel
     {

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace mywebapi.Services
+namespace MyWebApi.Services
 {
     public class SpecialValuesService : ISpecialValuesService
     {
