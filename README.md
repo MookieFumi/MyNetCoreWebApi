@@ -4,7 +4,9 @@ En este repo voy a ir metiendo todos los conceptos que he ido asimilando al ver 
 
 Todas estas notas de abajo las tengo que ir organizando y desarrollando.
 
-# Conceptos básicos
+https://docs.microsoft.com/en-us/aspnet/core/
+
+# Conceptos básicos/ fundamentales
 
 Para saber las versiones tanto del SDK como del runtime tenemos varios comandos:
 
@@ -140,55 +142,58 @@ El pipeline de una aplicación de .Net Core es el siguiente:
       * Caché sincronizada entre varios servidores.         
       * SQL Server/ Redis.
 
-* **Middlewares**.
-    * Es un concepto que se introdujo en Owin.
-    * **Son componentes que forma un pipeline entre el servidor y nuestra aplicación**.
-    * Se procesan en orden.
-    ![Middleware pipeline](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/_static/request-delegate-pipeline.png)
-    * Middleware pass throw Revisar concepto
-    * Ojo! Tiene que acabar en un *Run siempre*, ojo! o un *Use sin hacer invoke del siguiente*.
-    * Tipos de Middleares
-      * **Use**
-        * Response.HasStarted. Es útil para indicar si las cabeceras han sido enviadas o el body ha sido escrito. Si es true, sólo es válido llamar a Respone.WriteAsync y no se puede por otro lado modificar la cabeceras.
-      * **Run**
-        * Es un Middleware terminal.	
-      * **Map**
-        * Divide el pipeline en ramas o branches en función de la ruta de petición.
-      * **MapWhen**        
-        * Es map pero con una condición, hacer una rama su se evalua cierto el predicado
-    * Clase.
-	```
-    public class CustomMiddleware
+## Middlewares
+
+https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware?tabs=aspnetcore2x
+
+* Es un concepto que se introdujo en Owin.
+* **Son componentes que forma un pipeline entre el servidor y nuestra aplicación**.
+* Se procesan en orden.
+![Middleware pipeline](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/_static/request-delegate-pipeline.png)
+* Middleware pass throw Revisar concepto
+* Ojo! Tiene que acabar en un *Run siempre*, ojo! o un *Use sin hacer invoke del siguiente*.
+* Tipos de Middleares
+    * **Use**
+    * Response.HasStarted. Es útil para indicar si las cabeceras han sido enviadas o el body ha sido escrito. Si es true, sólo es válido llamar a Respone.WriteAsync y no se puede por otro lado modificar la cabeceras.
+    * **Run**
+    * Es un Middleware terminal.	
+    * **Map**
+    * Divide el pipeline en ramas o branches en función de la ruta de petición.
+    * **MapWhen**        
+    * Es map pero con una condición, hacer una rama su se evalua cierto el predicado
+* Clase.
+```
+public class CustomMiddleware
+{
+    private readonly RequestDelegate _next;
+
+    public CustomMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
-
-        public RequestResponseLoggingMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
-
-        public async Task Invoke(HttpContext context)
-        {
-           await _next(context);            
-        }
+        _next = next;
     }
-	```
-    * Ciclo de vida. Sólo se crea una vez durante la inicialización del pipeline.
-    * Es importante la posición del Middleware, ejemplo claro con Compression (ahora ASPNet realiza la compresión así no dependemos del IIS) antes o después por ejemplo de los estáticos.
-    * Existen una serie de Middleware ya creados que son los llamados **Built-in middleware**
-      * **Authentication**. Provides authentication support.        
-      * **CORS**. Configures Cross-Origin Resource Sharing.        
-      * **Response Caching**. Provides support for caching responses.        
-      * **Response Compression**. Provides support for compressing responses.        
-      * **Routing**. Defines and constrains request routes.        
-        * No es exclusivo de MVC, es ASPNet Core.
-      * **Session**.Provides support for managing user sessions.        
-      * **Static Files**. Provides support for serving static files and directory browsing.
-      * **URL Rewriting Middleware**. Provides support for rewriting URLs and redirecting requests.
-        * Mapear las URL de peticiones entrantes a las URL que internamente utiliza la aplicación.    
-        * Por ejemplo forzar el tráfico Https, en vez de configurarlo en IIS.	
-      * **Session**. ASPNet Session, por defecto viene sin sesión porque sesión es un middleware (services.AddSession(), app.UseSession()).
-      * **MVC**. Es otro middleware de ASPNet Core, es decir services.AddMvc()/ app.UseMvcWithDefaultRoute()
+
+    public async Task Invoke(HttpContext context)
+    {
+        await _next(context);            
+    }
+}
+```
+* Ciclo de vida. Sólo se crea una vez durante la inicialización del pipeline.
+* Es importante la posición del Middleware, ejemplo claro con Compression (ahora ASPNet realiza la compresión así no dependemos del IIS) antes o después por ejemplo de los estáticos.
+* Existen una serie de Middleware ya creados que son los llamados **Built-in middleware**
+    * **Authentication**. Provides authentication support.        
+    * **CORS**. Configures Cross-Origin Resource Sharing.        
+    * **Response Caching**. Provides support for caching responses.        
+    * **Response Compression**. Provides support for compressing responses.        
+    * **Routing**. Defines and constrains request routes.        
+    * No es exclusivo de MVC, es ASPNet Core.
+    * **Session**.Provides support for managing user sessions.        
+    * **Static Files**. Provides support for serving static files and directory browsing.
+    * **URL Rewriting Middleware**. Provides support for rewriting URLs and redirecting requests.
+    * Mapear las URL de peticiones entrantes a las URL que internamente utiliza la aplicación.    
+    * Por ejemplo forzar el tráfico Https, en vez de configurarlo en IIS.	
+    * **Session**. ASPNet Session, por defecto viene sin sesión porque sesión es un middleware (services.AddSession(), app.UseSession()).
+* **MVC**. Es otro middleware de ASPNet Core, es decir services.AddMvc()/ app.UseMvcWithDefaultRoute()
     
 # ASPNet MVC 
 
@@ -254,64 +259,74 @@ El pipeline de una aplicación de .Net Core es el siguiente:
       * ModelBinder.
         * Enlazar un tipo con datos con una representación concreta.
         * IModelBinder. ¿Cómo asocio un parámetro de con un IModelBinder? Con IModelBinderProvider.
-      * InputFormatter.
-            A lo webapi, sólo a través de body
-            IInputFormatter
-        Negociación de contenido
-            Negociar dos partes, yo servidor tengo que poder ofrecer 
-            En Core MVC la negociación de contenido se realizar a través de IActionResult
-            Algunos ActionResult tien negociación de contenido y otros no   
-                ViewResult. Siempre html
-                JSONResult. Siemrpe JSON
-                ContentResult. Siempre texto plano
-                OkObjectResult. Negociación de contenido
-                NotFoundObjectResult. Negociación de contenido
-            Para hacer uno personalizados
-                IOutputFormatter
-        Produces
-            Filtro de aplicaciónLimita que output formatters se pueden tener en consideración
-            Ignorar cabecera accept
-        Output formatters predefenidos
-            HttpContentOutputFormatter
-            StringOutputFormatter
-            StreamOutputFormatter
-            JsonOutputFormatter
-        ¿Cuándo un filtro o cuando un Middleware?
-            Un filtro para un tema específico de MVC
-        Es decir, y no hay que olvidar que tenemos dos pipelines, el de Core y el específico de MVC
-        Como cortocircuitar en un filtro
-            Devolver un IActionResult en context.Result
-        Pipeline
-            ActionExecution Ver imagen en Google
-                Authorization filters
-                    Antes de ejecutar la aplicación
-                    ¿Tiene autorización el usuario para acceder al recurso?
-                    No lanzar excepciones puesto que no el filtro de expceción no las manajeara.
-                Resource filters
-                    Antes y después de ejecutar la acción.
-                Model binding
-                Action filters
-                    Antes y después de ejecutar la aplicación
-                Exception filters
-                Result filters
-                    Sólo si la acción ah sido ejecutada con éxito
-                    Surround
-                Result execution
-        Se pueden heradar de los filtross builtin
-            AuthorizationFilter
-            ResultFilterAttribute
-            ActionFilterAttribute
-            ExceptionFilterAttribute
-        DI
-            No hay DI por constructor en los filtros
-            ServiceFilterAtrtribute.
-                Lo recupera desde el contendor de dependencias.
-            TypeFilterAttribute
-                Le podemos pasar parámetros
-            Usar un Middleware como filtro  
-                Es un guarrería, matar moscas a cañonazos
-        De serie
-            Authorize
-            AllowAnonymous
-            RequireHttps
-            RequireCache
+      * InputFormatter. A lo webapi, sólo a través de body (IInputFormatter).        
+      * Negociación de contenido.
+        * Negociar dos partes, yo servidor tengo que poder ofrecer . En ASPNet Core MVC la negociación de contenido se realiza a través de IActionResult.
+        * Algunos ActionResult tien negociación de contenido y otros no:
+          * ViewResult. Siempre html.
+          * JSONResult. Siemrpe JSON.
+          * ContentResult. Siempre texto plano.
+          * OkObjectResult. Negociación de contenido.
+          * NotFoundObjectResult. Negociación de contenido.
+        * Para hacer uno personalizado (IOutputFormatter).
+          * Produces.
+            * Filtro de aplicación.
+            * Limita que output formatters se pueden tener en consideración.
+            * Ignorar cabecera accept.        
+          * Output formatters predefenidos.
+            * HttpContentOutputFormatter.
+            * StringOutputFormatter.
+            * StreamOutputFormatter.
+            * JsonOutputFormatter
+
+## Filtros
+
+https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/filters
+
+Los filtros en ASP.NET Core MVC le permiten ejecutar código antes o después de ciertas etapas del pipeline de ejecuición de la petición. Y existen una serie de filtros incorporados que manejan tareas tales como la autorización (impidiendo el acceso a los recursos para los cuales un usuario no está autorizado), asegurando que todas las solicitudes usen HTTPS y el caché de respuestas (cortocircuitando la línea de solicitud para devolver una respuesta en caché) aunque también tenemos la posibilidad de crear filtros personalizados para manejar aspectos transversales (cross-cutting) para su aplicación. Cada vez que desee evitar la duplicación de código en las acciones, los filtros son la solución. Por ejemplo, puede consolidar el código de manejo de errores en un filtro de excepción.
+
+* **¿Cuándo un filtro o cuando un Middleware?**
+    * Un filtro para un tema específico de MVC, no hay que olvidar que tenemos dos pipelines, el de Core y el específico de MVC.
+    * Si quiero escribir respuesta un filtro.
+    * Tipos de peticiones un Middleware.
+    * Logging un Middleware.
+    * Cortociercuito lo antes que puedo (1º Middleware y 2º Filtro).
+    * Caché. En Middleware y si necesitamos negocio en filtro.
+    * Un filtro está atado a MVC, por lo que si quisiéramos ir a NancyFx no podríamos reutilizarlo.
+    * Validaciones de ViewModels por ejemplo con FluentValidation.
+
+* Como cortocircuitar en un filtro.
+    * Devolver un IActionResult en context.Result.
+
+![MVC pipeline](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/filters/_static/filter-pipeline-1.png)
+![MVC pipeline](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/filters/_static/filter-pipeline-2.png)
+
+* Pipeline ActionExecution.
+    * Authorization filters.
+    * Antes de ejecutar la aplicación
+        * ¿Tiene autorización el usuario para acceder al recurso?
+        * No lanzar excepciones puesto que no el filtro de expceción no las manajeara.
+    * Resource filters.
+        * Antes y después de ejecutar la acción.
+    * Model binding.
+    * Action filters.
+        * Antes y después de ejecutar la aplicación.
+    * Exception filters.
+    * Result filters.
+        * Sólo si la acción ha sido ejecutada con éxito.
+        * Surround.
+    * Result execution
+    * Se pueden heradar de los filtros built-in (AuthorizationFilter, ResultFilterAttribute, ActionFilterAttribute, ExceptionFilterAttribute).
+* Inyección de dependencias.
+  * No hay DI por constructor en los filtros.
+  * ServiceFilterAtrtribute.
+    * Lo recupera desde el contendor de dependencias.
+  * TypeFilterAttribute.
+    * Le podemos pasar parámetros.
+  * Usar un Middleware como filtro.
+    * Es un guarrería, matar moscas a cañonazos
+* Estos son algunos de los filtros que vienen de serie (built-in):
+  * Authorize.
+  * AllowAnonymous.
+  * RequireHttps.
+  * RequireCache.
