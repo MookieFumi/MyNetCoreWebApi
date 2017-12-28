@@ -79,6 +79,11 @@ El pipeline de una aplicación de .Net Core es el siguiente:
     En ctor. IHostingEnvironment, ILoggerFactory, IConfiguration
 
 * **Inyección de dependencias** - DI.
+
+Es un patrón que permite reducir el nivel de acoplamiento entre los objetos y sus colaboradores o dependencias y esto se consigue no creando directamente las instancias de esos colaboradores/ dependencias. *Normalmente estas dependencias serán recibidas por constructor*.
+
+> El Principio de Inversión de Dependencia (DIP) establece que los módulos de alto nivel no deben depender de módulos de bajo nivel; ambos deben depender de abstracciones. Las abstracciones no deben depender de los detalles. Los detalles deben depender de las abstracciones.
+
   * Es inyección de dependencias de Net Core y no de ASPNet Core, puede ser usado por ejemplo en una consola
         http://panicoenlaxbox.blogspot.com.es/2017/11/crear-e-inicializar-un-contexto-en-ef.html
   * Ciclos de vida:
@@ -86,6 +91,30 @@ El pipeline de una aplicación de .Net Core es el siguiente:
     * **AddSingleton**
     > Las clases estáticas son para métodos, no para mantener estado.
     * **AddScoped**
+
+Podemos utilizar otro contenedor de dependencias que no sea el de serie, por ejemplo Autofaq...
+
+```csharp
+public IServiceProvider ConfigureServices(IServiceCollection services)
+{
+    var container = services.GetAutofacServiceProvider();
+    return container;
+}
+
+public static IServiceProvider GetAutofacServiceProvider(this IServiceCollection services)
+{
+    var builder = new ContainerBuilder();
+
+    //Services
+    builder.Populate(services);
+
+    //Register custom modules
+    builder.RegisterModule<MainModule>();
+
+    return new AutofacServiceProvider(builder.Build());
+}
+```
+
 * Notas
   * Por defecto, una app siempre está en producción
   * Métodos Configure y ConfigureService por environment, incluida la clase Startup
