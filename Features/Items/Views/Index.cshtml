@@ -1,5 +1,9 @@
 ﻿@model MyWebApi.Services.PaginatedResult<MyWebApi.Features.Items.ViewModels.ItemViewModel>
 
+@{
+    Layout = "_Layout";
+}
+
 <h2>Items. Index</h2>
 
 @foreach (var item in Model.Result)

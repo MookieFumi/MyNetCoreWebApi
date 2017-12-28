@@ -7,7 +7,6 @@ using MyWebApi.Services;
 
 namespace MyWebApi.Features.Home
 {
-    [Route("[controller]")]
     public class HomeController : Controller
     {
         private ILogger<HomeController> _logger;
@@ -21,7 +20,6 @@ namespace MyWebApi.Features.Home
 
         // GET home/index
         [HttpGet]
-        [HttpGet("index")]
         public IActionResult Index()
         {
             return View();
