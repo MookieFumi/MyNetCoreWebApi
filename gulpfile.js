@@ -46,7 +46,7 @@ gulp.task("min:css", function () {
 gulp.task("min", ["min:js", "min:css"]);
 
 gulp.task("sass", function () {
-    return gulp.src('Styles/main.scss')
+    return gulp.src(['Styles/main.scss', 'Styles/materialize.scss'])
         .pipe(sass())
         .pipe(gulp.dest('wwwroot/css'));
 });
