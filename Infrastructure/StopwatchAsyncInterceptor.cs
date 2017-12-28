@@ -43,13 +43,13 @@ namespace MyWebApi.Infrastructure
         private void LogBeforeProceed(IInvocation invocation)
         {
             var logger = _loggerFactory.CreateLogger(invocation.TargetType);
-            logger.LogInformation($"{nameof(StopwatchAsyncInterceptor)} --> Before --> {invocation.TargetType}.{invocation.Method.Name} Params {string.Join(", ", invocation.Arguments.Select(a => (JsonConvert.SerializeObject(a) ?? "").ToString()).ToArray())}", invocation.Arguments);
+            logger.LogInformation($"{nameof(StopwatchAsyncInterceptor)} --> Before --> {invocation.TargetType}.{invocation.Method.Name} Params {JsonConvert.SerializeObject(invocation.Arguments)}");
         }
 
         private void LogAfterProceed(IInvocation invocation, long elapsedMilliseconds, object result)
         {
             var logger = _loggerFactory.CreateLogger(invocation.TargetType.ToString());
-            logger.LogInformation($"{nameof(StopwatchAsyncInterceptor)} --> After --> {invocation.TargetType}.{invocation.Method.Name} ({elapsedMilliseconds} ms): result was {JsonConvert.SerializeObject(result)}.", result);
+            logger.LogInformation($"{nameof(StopwatchAsyncInterceptor)} --> After --> {invocation.TargetType}.{invocation.Method.Name} ({elapsedMilliseconds} ms): result was {JsonConvert.SerializeObject(result)}.");
         }
 
         private async Task InternalInterceptAsynchronous(IInvocation invocation)

@@ -1,0 +1,15 @@
+﻿@model MyWebApi.Services.PaginatedResult<MyWebApi.Features.Items.ViewModels.ItemViewModel>
+
+<h2>Items. Index</h2>
+
+@foreach (var item in Model.Result)
+{
+    <p>
+        <div>
+            <span>@item.Name</span>
+            <span>@item.SalePrice</span>
+            <img src="@item.Image" alt=""/>
+        </div>
+    </p>
+    <hr/>
+}
