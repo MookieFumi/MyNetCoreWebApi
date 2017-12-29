@@ -3,9 +3,10 @@
 
 @{
     Layout = "_Layout";
+    ViewBag.Title = Model.Title;
 }
 
-@*<h2>Hello @Model.Author! (@Model.Year)</h2>*@
+<h2>@Model.Home @Model.Author! (@Model.Year)</h2>
 
 
 @foreach (var value in Model.Values)

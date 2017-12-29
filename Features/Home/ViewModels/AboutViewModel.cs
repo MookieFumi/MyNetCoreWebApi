@@ -7,5 +7,7 @@ namespace MyWebApi.Features.Home.ViewModels
         public string Author { get; set; }
         public int Year { get; set; }
         public ICollection<int> Values { get; set; }
+        public string Home { get; set; }
+        public string Title { get; set; }
     }
 }

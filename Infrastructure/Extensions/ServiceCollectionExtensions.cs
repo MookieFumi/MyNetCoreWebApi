@@ -1,10 +1,10 @@
 ﻿using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
+using MyWebApi.Infrastructure;
 using MyWebApi.Infrastructure.DI.Modules;
 
-namespace MyWebApi.Infrastructure.Extensions
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
