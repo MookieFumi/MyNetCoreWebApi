@@ -16,8 +16,7 @@ namespace MyWebApi.Features.Home
         private readonly IStringLocalizer<SharedResource> _sharedLocalizer;
 
         public HomeController(ILogger<HomeController> logger, IValuesService valuesService,
-            IStringLocalizer<HomeController> localizer,
-        IStringLocalizer<SharedResource> sharedLocalizer
+            IStringLocalizer<HomeController> localizer, IStringLocalizer<SharedResource> sharedLocalizer
         )
         {
             _logger = logger;

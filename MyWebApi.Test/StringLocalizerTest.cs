@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace MyWebApi.Test
@@ -21,7 +22,14 @@ namespace MyWebApi.Test
         public StringLocalizerTest()
         {
             var webHostBuilder = new WebHostBuilder()
+<<<<<<< HEAD
                 .UseKestrel()
+=======
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.AddDebug();
+                })
+>>>>>>> Added environment controller
                 .UseStartup<Startup>();
             _server = new TestServer(webHostBuilder);
             _client = _server.CreateClient();
@@ -54,11 +62,19 @@ namespace MyWebApi.Test
             }
         }
 
+<<<<<<< HEAD
         [Fact]
         public async Task A()
         {
             var response = await _client.GetAsync("/api/environment");
             var a = await response.Content.ReadAsStringAsync();
+=======
+        [Fact(Skip = "HTTP 404 with ASP.NET Core Test Server when controllers are added to a seperate assembly")]
+        public async Task Any_Test()
+        {
+            var response = await _client.GetAsync("/about");
+            var content = await response.Content.ReadAsStringAsync();
+>>>>>>> Added environment controller
         }
     }
 }

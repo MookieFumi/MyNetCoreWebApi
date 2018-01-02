@@ -1,4 +1,4 @@
-﻿/// <binding BeforeBuild='clean, sass, min' Clean='clean' />
+﻿/// <binding BeforeBuild='clean, sass, min, fonts' Clean='clean' />
 "use strict";
 
 var gulp = require("gulp"),
@@ -46,7 +46,12 @@ gulp.task("min:css", function () {
 gulp.task("min", ["min:js", "min:css"]);
 
 gulp.task("sass", function () {
-    return gulp.src(['Styles/main.scss', 'Styles/materialize.scss'])
+    return gulp.src(["Styles/main.scss", "Styles/materialize.scss"])
         .pipe(sass())
-        .pipe(gulp.dest('wwwroot/css'));
+        .pipe(gulp.dest("wwwroot/css"));
+});
+
+gulp.task("fonts", function () {
+    return gulp.src("./node_modules/materialize-css/dist/fonts/**/**.+(woff|woff2)")
+        .pipe(gulp.dest("wwwroot/fonts"));
 });
