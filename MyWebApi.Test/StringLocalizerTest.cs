@@ -1,7 +1,12 @@
+using System;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Xunit;
@@ -11,11 +16,15 @@ namespace MyWebApi.Test
     public class StringLocalizerTest
     {
         private readonly TestServer _server;
+        private readonly HttpClient _client;
+
         public StringLocalizerTest()
         {
-            //Ojo, ahora mismo sólo se está haciendo para la cultura por defecto (puede valer)
-            var webHostBuilder = new WebHostBuilder().UseStartup<Startup>();
+            var webHostBuilder = new WebHostBuilder()
+                .UseKestrel()
+                .UseStartup<Startup>();
             _server = new TestServer(webHostBuilder);
+            _client = _server.CreateClient();
         }
 
         [Fact]
@@ -43,6 +52,13 @@ namespace MyWebApi.Test
             {
                 Assert.Contains(item.Name, properties.Select(p => p.Name));
             }
+        }
+
+        [Fact]
+        public async Task A()
+        {
+            var response = await _client.GetAsync("/api/environment");
+            var a = await response.Content.ReadAsStringAsync();
         }
     }
 }

@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyNetCoreWebApi\MyWebApi.csproj" />
+    <ProjectReference Include="..\MyWebApi\MyWebApi.csproj" />
   </ItemGroup>
 
 </Project>
