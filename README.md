@@ -373,14 +373,14 @@ Los filtros en ASP.NET Core MVC le permiten ejecutar código antes o después de
   * RequireHttps.
   * RequireCache.
 
-## Internacionalización: Globalización y localización.
+## Internacionalización: Globalización y localización
 
 La **internacionalización (*I18n*)** implica la globalización y la localización.
 
 * **Globalización (*G11n*)**. El proceso de crear una aplicación compatible con diferentes idiomas y regiones.
-* **Localización (*L10n*)**. Es el proceso de adaptación/ personalización de nuestra aplicación para soportar nuevas necesidades lingüisticas o culturales. Aunque a priori puede parecer que es solamente la traducción de unos recursos conviene recordar que estas adaptaciones también incluyen: formato de números, formato de fechas, símbolos de moneda, etc.. Es decir, el proceso de personalización de una aplicación para un determinado idioma y región.
+* **Localización (*L10n*)**. Es el proceso de adaptación/ personalización de nuestra aplicación para soportar nuevas necesidades lingüisticas o culturales. Aunque a priori puede parecer que es solamente la traducción de unos recursos conviene recordar que estas adaptaciones también incluyen: formato de números y fechas, símbolos de moneda, etc.. Es decir, el proceso de personalización de una aplicación para un determinado idioma y región.
 
-> Tenemos que tener absolutamente claro que con Culture establecemos la cultura y sirve principalmente para dar formato a fechas, números y símbolos de moneda y UICulture sirve para traducir nuestros recursos.
+> Tenemos que tener absolutamente claro la diferencia existente entre Culture y UICulture. Con Culture establecemos la cultura y sirve principalmente para dar formato a fechas, números y símbolos de moneda y UICulture sirve para traducir nuestros recursos.
 
 NET Core tiene soporte para la internacionalización a través de un Middleware dentro del ensamblado Microsoft.Extensions.Localization y al ser un Middleware primero debemos añadirlo como dependencia.
 
@@ -389,27 +389,17 @@ public void ConfigureServices(IServiceCollection services)
 {
     services.AddLocalization(options =>
     {
+        //Definimos la ruta/ ubicación de nuestros recursos
         options.ResourcesPath = "Resources";
     });
 }
 ```
 
-Para posteriormente añadir el middleware al método Configure del Startup, y es importante introducir este middleware justo antes de otros middlewares que dependan de la cultura como pueda ser el de MVC.
+Para posteriormente añadir el middleware al método Configure del Startup. Ojo! Es importante introducir este middleware justo antes que otros middlewares que dependan de la cultura como pueda ser el de MVC.
 
 ```csharp
 public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
-    if (env.IsDevelopment())
-    {
-        app.UseDeveloperExceptionPage();
-    }
-    else
-    {
-        app.UseExceptionHandler("/Home/Error");
-    }
-
-    app.UseStaticFiles();
-
     var supportedCultures = new List<CultureInfo>
     {
         new CultureInfo("es-ES"),
@@ -433,7 +423,9 @@ Features.Home.HomeController.es.resx
 Features.Home.HomeController.en.resx
 ```
 
-Y en el controlador inyectar IStringLocalizer.
+Y en el controlador inyectar **IStringLocalizer**. ¿Qué es IStringLocalizer? Es un artefacto creado para mejorar la productividad al desarrollar aplicaciones localizadas y utiliza tanto el ResourceManager como ResourceReader para proporcionar recursos en tiempo de ejecución. Si no encuentra la clave devuelve la misma clave solicitada, y este enfoque, puede cambiar un poco la percepción en el desarrollo ya que de esta forma no necesitamos ningún archivo de recursos por defecto. A mí personalmente me gusta más el enfoque tradicional.
+
+En el controlador también podemos inyectar **IHtmlLocalizer** que es la implementación para los recursos que contienen código HTML.
 
 ```csharp
 public HomeController(IStringLocalizer<HomeController> localizer)
@@ -443,10 +435,11 @@ public HomeController(IStringLocalizer<HomeController> localizer)
 }
 ```
 
-¿Qué no me gusta de esto?
+Conclusiones.
 
-* Que no tengo un repositorio central de recursos.
-* Que ahora tengo que utilizar los recursos con magic strings, no como antes que existía una clase autogenerada para poder acceder a los recursos.
+* ¿Qué no me gusta de esto?
+  * Que no tengo un repositorio central de recursos.
+  * Que ahora tengo que utilizar los recursos con magic strings, no como antes que existía una clase autogenerada para poder acceder a los recursos.
 
 La solución a la primera es relativamente sencilla. El equipo de MS propone crearnos una clase Dummy llamada SharedResource y nuestros recursos SharedResource.en.resx, SharedResource.es.resx.
 
@@ -462,19 +455,30 @@ public HomeController(IStringLocalizer<SharedResource> sharedLocalizer)
 }
 ```
 
-Ahora bien ¿De cuantas opciones disponemos para hacer establecer la cultura? ¿Cuántos proveedores de cultura tenemos disponibles? El middleware de localización utiliza 3 proveedores por defecto:
-* Mediante **query string**. *Ni que decir tiene y vuelvo a insistir en ello que no es lo mismo Culture (formato fechas, decimales, símbolo moneda) que UICulture (traducciones) y pongo un ejemplo muy concreto: Mi empresa trabaja en dolares (Culture en-US) y yo puedo ver la aplicación en español o inglés.*
-```
+La solución a la segunda (magic strings) es menos trivial y lo dejaré para un artículo posterior, en el cualquier mostraré una primera aproximación.
+
+Ahora bien **¿De cuantas opciones disponemos para hacer establecer la cultura? ¿Cuántos proveedores de cultura tenemos disponibles?** Disponemos del middleware de localización(*Microsoft.Extensions.Localization*) que utiliza 3 proveedores por defecto:
+
+> *Ni que decir tiene y vuelvo a insistir en ello que no es lo mismo Culture (formato fechas, decimales, símbolo moneda) que UICulture (traducciones) y pongo un ejemplo muy concreto: Mi empresa trabaja en dolares (Culture en-US) y yo puedo ver la aplicación en español o inglés.*
+
+* Mediante **query string**.
+
+Si en la query string indicamos sólo una de las dos (culture/ ui-culture) nos cambia tanto Culture como UICulture por lo que si queremos que sean diferentes debemos indicar las dos en la querystring.
+
+```script
+//Los símbolos de moneda, formatos de número y fecha serán en-US salvo las traducciones que serán es-ES
 ?culture=en-US&ui-culture=es-ES
 
+//Tanto Culture como UICulture serán en-US
 ?culture=en-US
 
-?ui-culture=en-US
+//Tanto Culture como UICulture serán es-Es
+?ui-culture=es-ES
 ```
-Si sólo indamos culture o ui-culture nos cambia tanto Culture como UICulture por lo que si sólo queremos que ambas sean diferentes debemos indicar las dos en la querystring.
-* Mediante cookie
-    
-    Un modo más persistente es enviar en la request la cultura mediante una cookie, el nombre por defecto de la cookie de cultura es ".AspNetCore.Culture" pero este nombre puede sobreescribirse.
+
+* Mediante **cookie**
+
+Un modo más persistente es enviar en la request la cultura mediante una cookie. El nombre por defecto de la cookie de cultura es ".AspNetCore.Culture" pero este nombre puede sobreescribirse durante la configuración.
 
 ```csharp
 var cookieProvider = localizationOptions.RequestCultureProviders
@@ -483,7 +487,7 @@ var cookieProvider = localizationOptions.RequestCultureProviders
 cookieProvider.CookieName = "Culture";
 ```
 
-```
+```script
 c=en-US|uic=es-ES
 
 c=en-US
@@ -491,17 +495,17 @@ c=en-US
 uic=en-US
 ```
 
-> Durante las pruebas que he realizado para este post por sólo me ha funcionado la opción en la que hay que indicar tanto la Culture como UICulture.  
+> Durante las pruebas que he realizado para este post por sólo me ha funcionado la opción en la que hay que indicar tanto la Culture como UICulture.
 
-* Mediante la cabecera Accept-Language
+* Mediante la cabecera **Accept-Language**
 
-    Este proveedor comprueba la cabecera Accept-Language que ha sido enviada en la petición y no podrás diferenciar entre Culture y CultureUI.
+    Este proveedor comprueba la cabecera Accept-Language que ha sido enviada en la petición y no se puede diferenciar entre Culture y CultureUI.
 
 ```csharp
 Accept-Language:en-US,en;q=0.8,es;q=0.6;
 ```
 
-Está claro que podemos cambiar el orden de estos proveedores o incluso eliminarlos si procede.
+El orden de estos proveedores es importante ya que el último es el que prevalece, pero está claro que podemos cambiar este orden e incluso eliminarl alguno si procede.
 
 ```csharp
 private static void RemoveAcceptLanguageProvider(RequestLocalizationOptions options)
@@ -513,10 +517,7 @@ private static void RemoveAcceptLanguageProvider(RequestLocalizationOptions opti
 }
 ```
 
-También existe otro proveedor que aunque no se encuentra entre los de por defecto es muy chulo, es el llamado **RouteDataRequestCultureProvider**, que por su nombre podemos sospechar que la cultura pasará a ser parte de la ruta. Para añadirlo bastaría con incluirlo entre los proveedores por defecto y modificar el enrutado de nuestra aplicación.
-
-Revisar. Tengo que prepararlo.
-> Using URL parameters is one of the approaches to localisation Google suggests as it is more user and SEO friendly than some of the other options.
+También existe otro proveedor que aunque no se encuentra entre los de por defecto es muy chulo, es el llamado **RouteDataRequestCultureProvider**, que como por su nombre podemos sospechar que la cultura pasará a ser parte de la ruta. Para añadirlo bastaría con incluirlo entre los proveedores por defecto y modificar el enrutado de nuestra aplicación.
 
 ```csharp
 var requestProvider = new RouteDataRequestCultureProvider();
@@ -532,9 +533,11 @@ options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(async
 }));
 ```
 
+> Using URL parameters is one of the approaches to localisation Google suggests as it is more user and SEO friendly than some of the other options.
+
 Otras cosas chulas que hay que comentar:
 
-* **Localización de vistas**. Tal y como hemos visto, en las vistas podemos inyectar componentes/ colaboradores y en este caso lo que podemos hacer es inyectar un servicio del tipo IViewLocalizer que es el encargado de proporcionar "cadenas localizadas" a una vista ya sea con soporte(*IHtmlLocalizer*) o no de HTML(*IStringLocalizer*).
+* **Localización de vistas**. Tal y como hemos visto, en las vistas podemos inyectar componentes/ colaboradores y en este caso lo que podemos hacer es inyectar un servicio del tipo IViewLocalizer que es el encargado de proporcionar "cadenas localizadas" a una vista ya sea con soporte de HTML (*IHtmlLocalizer*) o no (*IStringLocalizer*).
 
 ```html
 @inject IStringLocalizer<SharedResource> Localizer
@@ -556,11 +559,11 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-* **Cadenas formateadas**. Justo como hemos visto en el punto anterior tenemos soporte para las cadenas formateadas ya que las clases localizadoras como último parámetro admiten el típico params object[].
+* **Cadenas formateadas**. Justo como hemos visto en el punto anterior tenemos soporte para las cadenas formateadas ya que las clases "localizadoras" como último parámetro admiten el típico params object[] que son los argumentos del string.Format.
 
 * **Localización de DataAnnotations**. Si queremos que la localización funcione en los DataAnnotations de nuestros ViewModels debemos añadirla como dependencia en ConfigureServices de nuestra clase Startup.
 
-```chsarp
+```csharp
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddMvc()
@@ -575,5 +578,9 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 ### Referencias
-https://joonasw.net/view/aspnet-core-localization-deep-dive
-https://andrewlock.net/url-culture-provider-using-middleware-as-mvc-filter-in-asp-net-core-1-1-0/
+
+![https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization)
+
+![https://joonasw.net/view/aspnet-core-localization-deep-dive](https://joonasw.net/view/aspnet-core-localization-deep-dive)
+
+![https://andrewlock.net/url-culture-provider-using-middleware-as-mvc-filter-in-asp-net-core-1-1-0/](https://andrewlock.net/url-culture-provider-using-middleware-as-mvc-filter-in-asp-net-core-1-1-0/)
