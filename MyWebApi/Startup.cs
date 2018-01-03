@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Localization.Routing;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,7 +24,12 @@ namespace MyWebApi
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc()
-                .AddFeatureFolders();
+                .AddFeatureFolders()
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization(options =>
+                {
+                    options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(SharedResource));
+                });
 
             services.AddLocalization(options =>
             {
@@ -73,10 +76,17 @@ namespace MyWebApi
                 .First();
             cookieProvider.CookieName = "Culture";
 
-            var requestProvider = new RouteDataRequestCultureProvider();
-            options.RequestCultureProviders.Insert(0, requestProvider);
+            RemoveAcceptLanguageProvider(options);
 
             return options;
+        }
+
+        private static void RemoveAcceptLanguageProvider(RequestLocalizationOptions options)
+        {
+            var acceptLanguageProvider = options.RequestCultureProviders
+                .OfType<AcceptLanguageHeaderRequestCultureProvider>()
+                .First();
+            options.RequestCultureProviders.Remove(acceptLanguageProvider);
         }
 
         private static List<CultureInfo> GetSupportedCultures()
@@ -86,7 +96,8 @@ namespace MyWebApi
                 new CultureInfo("es"),
                 new CultureInfo("es-ES"),
                 new CultureInfo("en"),
-                new CultureInfo("en-US")
+                new CultureInfo("en-US"),
+                new CultureInfo("en-GB")
             };
         }
     }

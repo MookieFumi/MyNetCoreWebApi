@@ -117,7 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>Title</value>
+  </data>
+  <data name="WelcomeExtendedMessage" xml:space="preserve">
+    <value>Welcome to my page &lt;b&gt;{0}&lt;/b&gt;. &lt;i&gt;Are you sure?&lt;/i&gt;</value>
   </data>
 </root>

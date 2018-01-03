@@ -5,7 +5,12 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyWebApi", "MyWebApi\MyWebApi.csproj", "{129071ED-C608-4685-9E75-E6243E23409A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWebApi.Test", "MyWebApi.Test\MyWebApi.Test.csproj", "{7EA31D12-B684-415E-89B9-3F96F2B22C05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyWebApi.Test", "MyWebApi.Test\MyWebApi.Test.csproj", "{7EA31D12-B684-415E-89B9-3F96F2B22C05}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F9607515-79C2-4BD0-A851-BB31476FFF0A}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

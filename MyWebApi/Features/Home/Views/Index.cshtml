@@ -1,5 +1,20 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@using MyWebApi
+
+@inject IStringLocalizer<SharedResource> Localizer
+@inject IHtmlLocalizer<SharedResource> HtmlLocalizer
+
+@model MyWebApi.Features.Home.ViewModels.HomeViewModel    
+
+@{
     Layout = "_Layout";
 }
 
-<h2>Home</h2>
+<h3>@Localizer[SharedResourceKeys.Home]</h3>
+
+<p>@HtmlLocalizer[SharedResourceKeys.WelcomeExtendedMessage, "Buddy"]</p>
+
+@Html.LabelFor(p=>p.Author)
+
+

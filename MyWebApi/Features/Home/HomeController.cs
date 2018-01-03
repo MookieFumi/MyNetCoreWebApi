@@ -29,7 +29,8 @@ namespace MyWebApi.Features.Home
         [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            var viewModel = new HomeViewModel {Author = "MookieFumi"};
+            return View(viewModel);
         }
 
         // GET home/about
