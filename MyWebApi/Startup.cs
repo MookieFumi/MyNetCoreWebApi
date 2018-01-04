@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
@@ -25,10 +27,13 @@ namespace MyWebApi
         {
             services.AddMvc()
                 .AddFeatureFolders()
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddViewLocalization()
                 .AddDataAnnotationsLocalization(options =>
                 {
-                    options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(SharedResource));
+                    options.DataAnnotationLocalizerProvider = (type, factory) =>
+                    {
+                        return factory.Create(typeof(SharedResource));
+                    };
                 });
 
             services.AddLocalization(options =>
@@ -99,6 +104,22 @@ namespace MyWebApi
                 new CultureInfo("en-US"),
                 new CultureInfo("en-GB")
             };
+        }
+    }
+
+    public class A : IRequestCultureProvider
+    {
+        public Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class B : RequestCultureProvider
+    {
+        public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
+        {
+            throw new NotImplementedException();
         }
     }
 }
