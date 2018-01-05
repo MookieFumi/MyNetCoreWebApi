@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
 
 namespace MyWebApi
 {
@@ -62,11 +63,10 @@ namespace MyWebApi
             app.UseRequestResponseLoggingMiddleware();
 
             app.UseRequestLocalization(GetRequestLocalizationOptions());
-
             app.UseMvcWithDefaultRoute();
         }
 
-        private static RequestLocalizationOptions GetRequestLocalizationOptions()
+        private RequestLocalizationOptions GetRequestLocalizationOptions()
         {
             var supportedCultures = GetSupportedCultures();
             var options = new RequestLocalizationOptions
@@ -82,6 +82,13 @@ namespace MyWebApi
             cookieProvider.CookieName = "Culture";
 
             RemoveAcceptLanguageProvider(options);
+
+            //var routeDataRequestCultureProvider = new RouteDataRequestCultureProvider { Options = options };
+            //options.RequestCultureProviders.Insert(0, routeDataRequestCultureProvider);
+
+            //Eliminamos todos los proveedores
+            //options.RequestCultureProviders.Clear();
+            //options.RequestCultureProviders.Add(new MyRequestCultureProvider());
 
             return options;
         }
@@ -107,19 +114,26 @@ namespace MyWebApi
         }
     }
 
-    public class A : IRequestCultureProvider
+    public class MyRequestCultureProvider : CookieRequestCultureProvider
     {
-        public Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
+        public MyRequestCultureProvider()
         {
-            throw new NotImplementedException();
+            CookieName = "Culture";
         }
-    }
 
-    public class B : RequestCultureProvider
-    {
-        public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
+        public override async Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
         {
-            throw new NotImplementedException();
+            var result = await base.DetermineProviderCultureResult(httpContext);
+            IList<StringSegment> cultures = result.Cultures;
+
+            var companyHeader = httpContext.Request.Cookies.SingleOrDefault(p => p.Key == "Company");
+            if (companyHeader.Key != null && companyHeader.Value == "666")
+            {
+                cultures.Clear();
+                cultures.Add("en-US");
+            }
+
+            return await Task.FromResult(new ProviderCultureResult(result.Cultures, result.UICultures));
         }
     }
 }

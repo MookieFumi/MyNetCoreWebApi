@@ -4,7 +4,6 @@ using MyWebApi.Services;
 
 namespace MyWebApi.Features.Items
 {
-    [Route("[controller]")]
     public class ItemsController : Controller
     {
         private readonly IItemsService _itemsService;
@@ -17,7 +16,6 @@ namespace MyWebApi.Features.Items
 
         // GET items/index
         [HttpGet]
-        [HttpGet("index")]
         public IActionResult Index(PaginatedConfiguration pagination)
         {
             var result = Get(pagination);

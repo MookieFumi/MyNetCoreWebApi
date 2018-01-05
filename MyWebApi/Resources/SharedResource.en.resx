@@ -129,4 +129,7 @@
   <data name="WelcomeExtendedMessage" xml:space="preserve">
     <value>Welcome to my page &lt;b&gt;{0}&lt;/b&gt;. &lt;i&gt;Are you sure?&lt;/i&gt;</value>
   </data>
+  <data name="NalgaParaSergio" xml:space="preserve">
+    <value>Nalgita</value>
+  </data>
 </root>

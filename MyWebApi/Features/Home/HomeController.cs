@@ -34,7 +34,7 @@ namespace MyWebApi.Features.Home
         }
 
         // GET home/about
-        [HttpGet("about")]
+        [HttpGet]
         public IActionResult About()
         {
             var viewModel = new AboutViewModel

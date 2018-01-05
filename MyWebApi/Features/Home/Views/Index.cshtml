@@ -5,7 +5,7 @@
 @inject IStringLocalizer<SharedResource> Localizer
 @inject IHtmlLocalizer<SharedResource> HtmlLocalizer
 
-@model MyWebApi.Features.Home.ViewModels.HomeViewModel    
+@model MyWebApi.Features.Home.ViewModels.HomeViewModel
 
 @{
     Layout = "_Layout";
@@ -15,6 +15,6 @@
 
 <p>@HtmlLocalizer[SharedResourceKeys.WelcomeExtendedMessage, "Buddy"]</p>
 
-@Html.LabelFor(p=>p.Author)
+@Html.LabelFor(p => p.Author)
 
-
+@Html.TextBoxFor(p => p.Author)

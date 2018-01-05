@@ -1,12 +1,9 @@
-using System;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -43,7 +40,7 @@ namespace MyWebApi.Test
             }
         }
 
-        [Fact(Skip = "Throw an exception while localizer.GetAllStrings()")]
+        [Fact]
         public void All_Resources_Have_a_Key()
         {
             var properties = typeof(SharedResourceKeys).GetFields(BindingFlags.Public | BindingFlags.Static);
